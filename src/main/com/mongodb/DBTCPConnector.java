@@ -467,9 +467,13 @@ public class DBTCPConnector implements DBConnector {
         void done( DBPort port ) {
             Connection requestPort = getPinnedRequestPortForThread();
 
-            // keep request port
             if (port != requestPort) {
                 port.getProvider().release(port);
+            } else if (port == requestPort) {
+                port.getProvider().release(port);
+                setPinnedRequestPortForThread(null);
+                //p.getPool().done(p);
+                //_requestPort = null;
             }
         }
 
